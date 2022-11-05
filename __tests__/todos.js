@@ -80,7 +80,11 @@ describe("Todo Application", function () {
 
     const { id } = res.body;
 
-    const deleted = await agent.delete(`/todos/${id}`).send();
-    expect(deleted.body).toBe(true);
+    const res1 = await agent.delete(`/todos/${id}`).send();
+    expect(res1.body).toBe(true);
+
+    const res2 = await agent.delete("/todos/2856956").send();
+    expect(res2.body).toBe(false);
+    // console.log("oi", r.body)
   });
 });

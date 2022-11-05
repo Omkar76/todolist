@@ -57,9 +57,8 @@ app.delete("/todos/:id", async function (request, response) {
   // First, we have to query our database to delete a Todo by ID.
   let rowCount = 0;
   try {
-    rowCount = Todo.destroy({ where: { id: request.params.id } });
-    console.log(rowCount, "rows deleted");
-    response.send(true);
+    rowCount = await Todo.destroy({ where: { id: request.params.id } });
+    response.send(rowCount != 0);
     return;
   } catch (error) {
     console.log(error);
