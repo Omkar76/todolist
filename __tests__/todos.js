@@ -2,13 +2,13 @@ const request = require("supertest");
 
 const db = require("../models/index");
 const app = require("../app");
-const http = require('http')
+const http = require("http");
 let server, agent;
 
 describe("Todo Application", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(3000, () => { });
+    server = app.listen(3000, () => {});
     agent = request.agent(server);
   });
 
@@ -72,17 +72,15 @@ describe("Todo Application", function () {
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-    
     const res = await agent.post("/todos").send({
       title: "Eat chocolate",
       dueDate: new Date().toISOString(),
       completed: false,
     });
 
-    const {id} = res.body;
+    const { id } = res.body;
 
     const deleted = await agent.delete(`/todos/${id}`).send();
     expect(deleted.body).toBe(true);
-    // console.log("vruh", id)
   });
 });
