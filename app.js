@@ -41,6 +41,7 @@ app.post("/todos", async function (request, response) {
   try {
     const todo = await Todo.addTodo(request.body);
     return response.json(todo);
+    console.log(todo);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);

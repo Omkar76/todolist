@@ -9,13 +9,16 @@
 </head>
 <body>
 	<%- include('header.ejs') -%>
-	Todo Home Page
+	<h1>This is my Todo Application</h1>
     <table>
     <% for(let todo of todos){ %>
-        <td>
-        <%= todo.title %>
-        </td>
+        <tr>
+            <td>
+            <%= todo.title %>
+            </td>
+        </tr>
     <% } %>
     </table>    
+    <%- include('footer.ejs') -%>
 </body>
 </html>
