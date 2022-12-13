@@ -10,7 +10,7 @@ app.set("view engine", "ejs");
 app.get("/", async function (request, response) {
   const todos = await Todo.getTodos();
   if (request.accepts("html")) {
-    return response.render("index", { todos });
+    return response.render("index");
   } else {
     return response.json(todos);
   }
