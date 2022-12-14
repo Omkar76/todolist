@@ -13,14 +13,18 @@
     <div class="grid justify-center gap-y-2.5">
         <%- include('header.ejs') -%>
 
-            <form action="#" method="post">
-                <input class="border-gray-dark border px-2 py-3 rounded-md" type="text" placeholder="What's next?"
-                    name="" id="">
-                <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="" id="">
-                <button class="px-2 py-3 text-white rounded-md bg-green-500" name="">Add</button>
-            </form>
-            <%- include('todos.ejs') -%>
-            <%- include('footer.ejs') -%>
+        <form action="todos/" method="post">
+            <input class="border-gray-dark border px-2 py-3 rounded-md" type="text" placeholder="What's next?"
+                name="title">
+            <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="dueDate">
+            <button class="px-2 py-3 text-white rounded-md bg-green-500" name="">Add</button>
+        </form>
+        
+        <%- include('todos.ejs', {title : "Overdue", data: overdue}) -%>
+        <%- include('todos.ejs', {title : "Due Today", data: dueToday}) -%>
+        <%- include('todos.ejs', {title : "Due Later", data :dueLater}) -%>
+        
+        <%- include('footer.ejs') -%>
     </div>
 </body>
 

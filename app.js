@@ -5,12 +5,18 @@ const bodyParser = require("body-parser");
 const path = require("path");
 
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.get("/", async function (request, response) {
-  const todos = await Todo.getTodos();
+  const [overdue, dueToday, dueLater] = await Promise.all([
+    Todo.overdue(),
+    Todo.dueToday(),
+    Todo.dueLater(),
+  ]);
+
   if (request.accepts("html")) {
-    return response.render("index");
+    return response.render("index", { overdue, dueToday, dueLater });
   } else {
     return response.json(todos);
   }
@@ -39,9 +45,8 @@ app.get("/todos/:id", async function (request, response) {
 
 app.post("/todos", async function (request, response) {
   try {
-    const todo = await Todo.addTodo(request.body);
-    return response.json(todo);
-    console.log(todo);
+    await Todo.addTodo(request.body);
+    response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
