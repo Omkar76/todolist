@@ -4,25 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>     
+        const csrfToken = document.querySelector('meta[name="csrf-token"').getAttribute('content');
+        function addTodo(form){
+            event.preventDefault();
+
+            const entries = new FormData(form).entries()
+            const body = {}
+            for(let [key, value] of entries){
+                body[key] = value;
+            }
+
+            fetch(`todos/`, {
+                method : 'POST',
+                headers : {'Content-Type': 'application/json'},
+                body : JSON.stringify(body)
+            })
+            .then(res=>{
+                if(res.ok){
+                    window.location.reload()
+                }
+            }).catch(console.log)
+        }
+
+        function updateCompletionStatus(id, status){
+            const completed = event.target.checked;
+            fetch(`todos/${id}/`, {
+                method : 'PUT',
+                headers : {'Content-Type': 'application/json'},
+                body : JSON.stringify({completed, _csrf : csrfToken})
+            })
+            .then(res=>{
+                if(res.ok){
+                    window.location.reload()
+                }
+            }).catch(console.log)
+        }
+
+        function deleteTodo(id){
+            fetch(`/todos/${id}/`, {
+                method : 'DELETE',
+                headers : {'Content-Type': 'application/json'},
+                body : JSON.stringify({_csrf : csrfToken})
+            })
+            .then(res=>{
+                if(res.ok){
+                    window.location.reload()
+                }
+            }).catch(console.log)
+        }
+    </script>
 </head>
 
 <body>
     <div class="grid justify-center gap-y-2.5">
         <%- include('header.ejs') -%>
 
-        <form action="todos/" method="post">
+        <form action="todos/" method="post" onsubmit="addTodo(this)"  enctype="text/plain">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input class="border-gray-dark border px-2 py-3 rounded-md" type="text" placeholder="What's next?"
-                name="title">
-            <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="dueDate">
+                name="title" required/>
+            <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="dueDate" required/>
             <button class="px-2 py-3 text-white rounded-md bg-green-500" name="">Add</button>
         </form>
         
         <%- include('todos.ejs', {title : "Overdue", data: overdue}) -%>
         <%- include('todos.ejs', {title : "Due Today", data: dueToday}) -%>
-        <%- include('todos.ejs', {title : "Due Later", data :dueLater}) -%>
+        <%- include('todos.ejs', {title : "Due Later", data : dueLater}) -%>
+        <%- include('todos.ejs', {title : "Completed Items", data : completed}) -%>
         
         <%- include('footer.ejs') -%>
     </div>

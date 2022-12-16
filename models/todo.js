@@ -13,12 +13,21 @@ module.exports = (sequelize, DataTypes) => {
     static getTodos() {
       return this.findAll();
     }
-    static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false });
+
+    static async addTodo({ title, dueDate }) {
+      return await this.create({
+        title: title,
+        dueDate: dueDate,
+        completed: false,
+      });
     }
 
     markAsCompleted() {
       return this.update({ completed: true });
+    }
+
+    setCompletionStatus(completed) {
+      return this.update({ completed });
     }
 
     static async overdue() {
@@ -50,6 +59,14 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.eq]: new Date(),
           },
+        },
+      });
+    }
+
+    static async completed() {
+      return this.findAll({
+        where: {
+          completed: true,
         },
       });
     }
