@@ -67,8 +67,8 @@
         <form action="todos/" method="post" onsubmit="addTodo(this)"  enctype="text/plain">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input class="border-gray-dark border px-2 py-3 rounded-md" type="text" placeholder="What's next?"
-                name="title" required/>
-            <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="dueDate" required/>
+                name="title" required autocomplete="off"/>
+            <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="dueDate" required autocomplete="off"/>
             <button class="px-4 py-3 text-white rounded-md bg-green-500" name="">Add</button>
         </form>
         
