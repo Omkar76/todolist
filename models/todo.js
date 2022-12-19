@@ -17,11 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll();
     }
 
-    static async addTodo({ title, dueDate }) {
+    static async addTodo({ title, dueDate, userId }) {
       return await this.create({
         title: title,
         dueDate: dueDate,
         completed: false,
+        userId,
       });
     }
 
@@ -33,43 +34,56 @@ module.exports = (sequelize, DataTypes) => {
       return this.update({ completed });
     }
 
-    static async overdue() {
+    static async remove(id, userId) {
+      return this.destroy({
+        where: {
+          id,
+          userId,
+        },
+      });
+    }
+
+    static async overdue(userId) {
       return this.findAll({
         where: {
           completed: false,
           dueDate: {
             [Op.lt]: new Date(),
           },
+          userId,
         },
       });
     }
 
-    static async dueLater() {
+    static async dueLater(userId) {
       return this.findAll({
         where: {
           dueDate: {
             [Op.gt]: new Date(),
           },
           completed: false,
+          userId,
         },
       });
     }
 
-    static async dueToday() {
+    static async dueToday(userId) {
       return this.findAll({
         where: {
           completed: false,
           dueDate: {
             [Op.eq]: new Date(),
           },
+          userId,
         },
       });
     }
 
-    static async completed() {
+    static async completed(userId) {
       return this.findAll({
         where: {
           completed: true,
+          userId,
         },
       });
     }

@@ -5,10 +5,25 @@ const app = require("../app");
 const cheerio = require("cheerio");
 
 let server, agent;
+const firstName = "John",
+  lastName = "Doe",
+  email = "john@example.com",
+  password = "#4ks@#45rf";
 
 function extractCsrfToken(response) {
   const $ = cheerio.load(response.text);
   return $('[name="_csrf"]').val();
+}
+
+async function login(agent, email, password) {
+  let res = await agent.get("/login");
+  let _csrf = extractCsrfToken(res);
+
+  await agent.post("/login").send({
+    email,
+    password,
+    _csrf,
+  });
 }
 
 describe("Todo Application", function () {
@@ -23,8 +38,37 @@ describe("Todo Application", function () {
     await server.close();
   });
 
+  test("Sign up", async () => {
+    let res = await agent.get("/signup").send();
+    let _csrf = extractCsrfToken(res);
+
+    res = await agent.post("/users").send({
+      firstName,
+      lastName,
+      email,
+      password,
+      _csrf,
+    });
+
+    expect(res.statusCode).toBe(302);
+  });
+
+  test("Sign out", async () => {
+    let res = await agent.get("/todos");
+    expect(res.statusCode).toBe(200);
+
+    res = await agent.get("/signout");
+    expect(res.statusCode).toBe(302);
+
+    res = await agent.get("/todos");
+    expect(res.statusCode).toBe(302);
+  });
+
   test("Creates a todo", async () => {
-    const res = await agent.get("/").send();
+    const agent = request.agent(server);
+    await login(agent, email, password);
+
+    const res = await agent.get("/todos").send();
     const _csrf = extractCsrfToken(res);
 
     const response = await agent.post("/todos").send({
@@ -37,7 +81,10 @@ describe("Todo Application", function () {
   });
 
   test("New todo has completed:false", async () => {
-    const res = await agent.get("/").send();
+    const agent = request.agent(server);
+    await login(agent, email, password);
+
+    const res = await agent.get("/todos").send();
     const _csrf = extractCsrfToken(res);
 
     const response = await agent.post("/todos").send({
@@ -50,7 +97,10 @@ describe("Todo Application", function () {
   });
 
   test("Marks a todo with the given ID as complete", async () => {
-    let res = await agent.get("/").send();
+    const agent = request.agent(server);
+    await login(agent, email, password);
+
+    let res = await agent.get("/todos").send();
     let _csrf = extractCsrfToken(res);
 
     const response = await agent.post("/todos").send({
@@ -60,7 +110,7 @@ describe("Todo Application", function () {
       _csrf,
     });
 
-    res = await agent.get("/").send();
+    res = await agent.get("/todos").send();
     _csrf = extractCsrfToken(res);
 
     const parsedResponse = JSON.parse(response.text);
@@ -75,7 +125,10 @@ describe("Todo Application", function () {
   });
 
   test("Marks a todo with the given ID as incomplete", async () => {
-    let res = await agent.get("/").send();
+    const agent = request.agent(server);
+    await login(agent, email, password);
+
+    let res = await agent.get("/todos").send();
     let _csrf = extractCsrfToken(res);
 
     const response = await agent.post("/todos").send({
@@ -85,7 +138,7 @@ describe("Todo Application", function () {
       _csrf,
     });
 
-    res = await agent.get("/").send();
+    res = await agent.get("/todos").send();
     _csrf = extractCsrfToken(res);
 
     const parsedResponse = JSON.parse(response.text);
@@ -101,7 +154,10 @@ describe("Todo Application", function () {
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-    let res = await agent.get("/").send();
+    const agent = request.agent(server);
+    await login(agent, email, password);
+
+    let res = await agent.get("/todos").send();
     let _csrf = extractCsrfToken(res);
 
     res = await agent.post("/todos").send({
@@ -112,13 +168,13 @@ describe("Todo Application", function () {
 
     const { id } = res.body;
 
-    res = await agent.get("/").send();
+    res = await agent.get("/todos").send();
     _csrf = extractCsrfToken(res);
 
     const res1 = await agent.delete(`/todos/${id}`).send({ _csrf });
     expect(res1.body).toBe(true);
 
-    res = await agent.get("/").send();
+    res = await agent.get("/todos").send();
     _csrf = extractCsrfToken(res);
 
     const res2 = await agent.delete("/todos/2856956").send({ _csrf });
