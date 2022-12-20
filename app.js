@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const csrf = require("tiny-csrf");
 const express = require("express");
+const flash = require("connect-flash");
 const LocalStratergy = require("passport-local");
 const passport = require("passport");
 const path = require("path");
@@ -30,7 +31,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(flash());
 passport.use(
   new LocalStratergy(
     {
@@ -92,6 +93,7 @@ app.get("/signup", function (request, response) {
 });
 
 app.get("/login", function (request, response) {
+  response.locals.messages = request.flash();
   response.render("login", { title: "Login", csrfToken: request.csrfToken() });
 });
 
@@ -107,7 +109,10 @@ app.get("/signout", function (request, response) {
 
 app.post(
   "/login",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
   function (request, response) {
     // console.log(request.user)
     response.redirect("/todos");
