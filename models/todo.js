@@ -76,7 +76,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       title: DataTypes.STRING,
       dueDate: DataTypes.DATEONLY,
-      completed: DataTypes.BOOLEAN,
+      completed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
