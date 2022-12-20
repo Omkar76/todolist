@@ -14,11 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll();
     }
 
-    static async addTodo({ title, dueDate }) {
+    static async addTodo({ title, dueDate, completed }) {
       return await this.create({
-        title: title,
-        dueDate: dueDate,
-        completed: false,
+        title,
+        dueDate,
+        completed,
       });
     }
 

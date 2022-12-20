@@ -36,19 +36,6 @@ describe("Todo Application", function () {
     expect(response.statusCode).toBe(200);
   });
 
-  test("New todo has completed:false", async () => {
-    const res = await agent.get("/").send();
-    const _csrf = extractCsrfToken(res);
-
-    const response = await agent.post("/todos").send({
-      title: "Build a nether portal",
-      dueDate: new Date().toISOString(),
-      _csrf,
-    });
-
-    expect(response.body.completed).toBe(false);
-  });
-
   test("Marks a todo with the given ID as complete", async () => {
     let res = await agent.get("/").send();
     let _csrf = extractCsrfToken(res);
@@ -85,19 +72,21 @@ describe("Todo Application", function () {
       _csrf,
     });
 
+    expect(response.body.completed).toBe(true);
+
     res = await agent.get("/").send();
     _csrf = extractCsrfToken(res);
 
-    const parsedResponse = JSON.parse(response.text);
-    const todoID = parsedResponse.id;
+    // const parsedResponse = JSON.parse(response.text);
+    const todoID = response.body.id;
 
     const markCompleteResponse = await agent
       .put(`/todos/${todoID}/`)
       .send({ _csrf, completed: false });
 
-    const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
+    // const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
 
-    expect(parsedUpdateResponse.completed).toBe(false);
+    expect(markCompleteResponse.body.completed).toBe(false);
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
