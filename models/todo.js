@@ -101,6 +101,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       dueDate: DataTypes.DATEONLY,
       completed: {
+        type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
     },
