@@ -97,15 +97,13 @@ describe("Todo Application", function () {
     res = await agent.get("/todos").send();
     _csrf = extractCsrfToken(res);
 
-    const parsedResponse = JSON.parse(response.text);
-    const todoID = parsedResponse.id;
+    const todoID = response.body.id;
 
     const markCompleteResponse = await agent
       .put(`/todos/${todoID}/`)
       .send({ _csrf, completed: true });
 
-    const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
-    expect(parsedUpdateResponse.completed).toBe(true);
+    expect(markCompleteResponse.body.completed).toBe(true);
   });
 
   test("Marks a todo with the given ID as incomplete", async () => {
@@ -125,14 +123,11 @@ describe("Todo Application", function () {
     res = await agent.get("/todos").send();
     _csrf = extractCsrfToken(res);
 
-    // const parsedResponse = JSON.parse(response.text);
     const todoID = response.body.id;
 
     const markCompleteResponse = await agent
       .put(`/todos/${todoID}/`)
       .send({ _csrf, completed: false });
-
-    // const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
 
     expect(markCompleteResponse.body.completed).toBe(false);
   });
