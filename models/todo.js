@@ -8,17 +8,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Todo.belongsTo(models.User, {
+        foreignKey: "userId",
+      });
       // define association here
     }
     static getTodos() {
       return this.findAll();
     }
 
-    static async addTodo({ title, dueDate, completed }) {
+    static async addTodo({ title, dueDate, completed, userId }) {
       return await this.create({
-        title,
-        dueDate,
-        completed,
+        title: title,
+        dueDate: dueDate,
+        completed: completed || false,
+        userId,
       });
     }
 
@@ -30,43 +34,56 @@ module.exports = (sequelize, DataTypes) => {
       return this.update({ completed });
     }
 
-    static async overdue() {
+    static async remove(id, userId) {
+      return this.destroy({
+        where: {
+          id,
+          userId,
+        },
+      });
+    }
+
+    static async overdue(userId) {
       return this.findAll({
         where: {
           completed: false,
           dueDate: {
             [Op.lt]: new Date(),
           },
+          userId,
         },
       });
     }
 
-    static async dueLater() {
+    static async dueLater(userId) {
       return this.findAll({
         where: {
           dueDate: {
             [Op.gt]: new Date(),
           },
           completed: false,
+          userId,
         },
       });
     }
 
-    static async dueToday() {
+    static async dueToday(userId) {
       return this.findAll({
         where: {
           completed: false,
           dueDate: {
             [Op.eq]: new Date(),
           },
+          userId,
         },
       });
     }
 
-    static async completed() {
+    static async completed(userId) {
       return this.findAll({
         where: {
           completed: true,
+          userId,
         },
       });
     }
@@ -74,7 +91,14 @@ module.exports = (sequelize, DataTypes) => {
 
   Todo.init(
     {
-      title: DataTypes.STRING,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: true,
+          len: 5,
+        },
+      },
       dueDate: DataTypes.DATEONLY,
       completed: {
         type: DataTypes.BOOLEAN,

@@ -1,22 +1,84 @@
-<section>
-    <div class="flex flex-row gap-2">
-        <h5 class="text-2xl"> <%- title %> </h2>
-        <span id="count-overdue" class="bg-gray-200 px-3 py-1 rounded-md"><%- data.length %></span>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
 
-    <% for(let todo of data) { %>
-        <div class="hover:bg-purple-100 group text-lg p-1.5 m-0.5 rounded-md">
-            <label>
-            <input autocomplete="off" type="checkbox" onchange="updateCompletionStatus(<%= todo.id %>)" <%= todo.completed ? "checked" : '' %> class="w-5 h-5 align-middle"  id="<%= todo.id %>" />
-            <%= todo.title  %>
-            </label>
-            <span class="invisible group-hover:visible" onclick="deleteTodo(<%= todo.id %>)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-6 h-6 inline">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                </svg>
-            </span>
-        </div>
-    <% } %> 
-</section>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>             
+        const csrfToken = document.querySelector('meta[name="csrf-token"').getAttribute('content');
+        function addTodo(form){
+            event.preventDefault();
+
+            const entries = new FormData(form).entries()
+            const body = {}
+            for(let [key, value] of entries){
+                body[key] = value;
+            }
+
+            fetch(`/todos`, {
+                method : 'POST',
+                headers : {'Content-Type': 'application/json'},
+                body : JSON.stringify(body)
+            })
+            .then(res=>{
+                if(res.ok){
+                    window.location.reload()
+                }
+            }).catch(console.log)
+        }
+
+        function updateCompletionStatus(id, status){
+            const completed = event.target.checked;
+            fetch(`/todos/${id}/`, {
+                method : 'PUT',
+                headers : {'Content-Type': 'application/json'},
+                body : JSON.stringify({completed, _csrf : csrfToken})
+            })
+            .then(res=>{
+                if(res.ok){
+                    window.location.reload()
+                }
+            }).catch(console.log)
+        }
+
+        function deleteTodo(id){
+            fetch(`/todos/${id}/`, {
+                method : 'DELETE',
+                headers : {'Content-Type': 'application/json'},
+                body : JSON.stringify({_csrf : csrfToken})
+            })
+            .then(res=>{
+                if(res.ok){
+                    window.location.reload()
+                }
+            }).catch(console.log)
+        }
+    </script>
+</head>
+
+<body>
+    <div class="grid justify-center gap-y-2.5 p-4 max-w-xl m-auto">
+        <%- include('header.ejs') -%>
+        <a href="/signout">Logout</a>
+        <form action="/" method="post" onsubmit="addTodo(this)"  enctype="text/plain">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input class="border-gray-dark border px-2 py-3 rounded-md" type="text" placeholder="What's next?"
+                name="title" required autocomplete="off"/>
+            <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="dueDate" required autocomplete="off"/>
+            <button class="px-4 py-3 text-white rounded-md bg-green-500" name="">Add</button>
+        </form>
+        
+        <%- include('todo.ejs', {title : "Overdue", data: overdue}) -%>
+        <%- include('todo.ejs', {title : "Due Today", data: dueToday}) -%>
+        <%- include('todo.ejs', {title : "Due Later", data : dueLater}) -%>
+        <%- include('todo.ejs', {title : "Completed Items", data : completed}) -%>
+        
+        <%- include('footer.ejs') -%>
+    </div>
+</body>
+
+</html>
