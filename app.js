@@ -57,7 +57,6 @@ passport.use(
           return done(null, false, { message: "Invalid password" });
         }
 
-        console.log("Yey! ");
         return done(null, user);
       } catch (err) {
         return done(err);
