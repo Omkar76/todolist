@@ -10,6 +10,7 @@ const session = require("express-session");
 const ensureLogin = require("connect-ensure-login");
 
 const { Todo, User } = require("./models");
+const { ValidationError } = require("sequelize");
 
 const app = express();
 const saltRounds = 10;
@@ -86,6 +87,8 @@ app.get("/", async function (request, response) {
 });
 
 app.get("/signup", function (request, response) {
+  response.locals.errors = request.flash("error");
+
   response.render("signup", {
     title: "Sign up",
     csrfToken: request.csrfToken(),
@@ -93,7 +96,7 @@ app.get("/signup", function (request, response) {
 });
 
 app.get("/login", function (request, response) {
-  response.locals.messages = request.flash();
+  response.locals.errors = request.flash("error");
   response.render("login", { title: "Login", csrfToken: request.csrfToken() });
 });
 
@@ -114,14 +117,24 @@ app.post(
     failureFlash: true,
   }),
   function (request, response) {
-    // console.log(request.user)
     response.redirect("/todos");
   }
 );
 
 app.post("/users", async function (request, response) {
-  const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
-  const user = await User.create({ ...request.body, password: hashedPassword });
+  let user;
+  try {
+    const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
+    user = await User.create({ ...request.body, password: hashedPassword });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      request.flash(
+        "error",
+        error.errors.map((err) => err.message)
+      );
+      return response.redirect("/signup");
+    }
+  }
 
   request.login(user, (err) => {
     if (err) {
@@ -143,6 +156,8 @@ app.get(
       Todo.completed(id),
     ]);
     if (request.accepts("html")) {
+      response.locals.errors = request.flash("error");
+
       return response.render("todos", {
         overdue,
         dueToday,
@@ -164,7 +179,6 @@ app.get(
       const todo = await Todo.findByPk(request.params.id);
       return response.json(todo);
     } catch (error) {
-      console.log(error);
       return response.status(404).json(error);
     }
   }
@@ -179,10 +193,20 @@ app.post(
         ...request.body,
         userId: request.user.id,
       });
-      return response.json(todo);
+
+      if (request.accepts("html")) {
+        return response.redirect("/todos");
+      } else {
+        return response.json(todo);
+      }
     } catch (error) {
-      console.log(error);
-      return response.status(422).json(error);
+      if (error instanceof ValidationError) {
+        request.flash(
+          "error",
+          error.errors.map((err) => err.message)
+        ); // horrible
+      }
+      return response.redirect("/todos");
     }
   }
 );

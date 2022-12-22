@@ -3,8 +3,8 @@
         <h5 class="text-2xl"> <%- title %> </h2>
         <span id="count-overdue" class="bg-gray-200 px-3 py-1 rounded-md"><%- data.length %></span>
     </div>
-
-    <% for(let todo of data) { %>
+    
+      <% for(let todo of data) { %>
         <div class="hover:bg-purple-100 group text-lg p-1.5 m-0.5 rounded-md">
             <label>
             <input autocomplete="off" type="checkbox" onchange="updateCompletionStatus(<%= todo.id %>)" <%= todo.completed ? "checked" : '' %> class="w-5 h-5 align-middle"  id="<%= todo.id %>" />

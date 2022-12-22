@@ -71,7 +71,7 @@ describe("Todo Application", function () {
     const res = await agent.get("/todos").send();
     const _csrf = extractCsrfToken(res);
 
-    const response = await agent.post("/todos").send({
+    const response = await agent.post("/todos").accept("json").send({
       title: "Buy milk",
       dueDate: new Date().toISOString(),
       completed: false,
@@ -87,7 +87,7 @@ describe("Todo Application", function () {
     let res = await agent.get("/todos").send();
     let _csrf = extractCsrfToken(res);
 
-    const response = await agent.post("/todos").send({
+    const response = await agent.post("/todos").accept("json").send({
       title: "Buy more milk",
       dueDate: new Date().toISOString(),
       completed: false,
@@ -113,7 +113,7 @@ describe("Todo Application", function () {
     let res = await agent.get("/todos").send();
     let _csrf = extractCsrfToken(res);
 
-    const response = await agent.post("/todos").send({
+    const response = await agent.post("/todos").accept("json").send({
       title: "Get Compound V from Vaught",
       dueDate: new Date().toISOString(),
       completed: true,
@@ -139,7 +139,7 @@ describe("Todo Application", function () {
     let res = await agent.get("/todos").send();
     let _csrf = extractCsrfToken(res);
 
-    res = await agent.post("/todos").send({
+    res = await agent.post("/todos").accept("json").send({
       title: "Eat chocolate",
       dueDate: new Date().toISOString(),
       _csrf,

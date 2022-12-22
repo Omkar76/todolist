@@ -10,26 +10,26 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>             
         const csrfToken = document.querySelector('meta[name="csrf-token"').getAttribute('content');
-        function addTodo(form){
-            event.preventDefault();
+        // function addTodo(form){
+        //     event.preventDefault();
 
-            const entries = new FormData(form).entries()
-            const body = {}
-            for(let [key, value] of entries){
-                body[key] = value;
-            }
+        //     const entries = new FormData(form).entries()
+        //     const body = {}
+        //     for(let [key, value] of entries){
+        //         body[key] = value;
+        //     }
 
-            fetch(`/todos`, {
-                method : 'POST',
-                headers : {'Content-Type': 'application/json'},
-                body : JSON.stringify(body)
-            })
-            .then(res=>{
-                if(res.ok){
-                    window.location.reload()
-                }
-            }).catch(console.log)
-        }
+        //     fetch(`/todos`, {
+        //         method : 'POST',
+        //         headers : {'Content-Type': 'application/json'},
+        //         body : JSON.stringify(body)
+        //     })
+        //     .then(res=>{
+        //         if(res.ok){
+        //             window.location.reload()
+        //         }
+        //     }).catch(console.log)
+        // }
 
         function updateCompletionStatus(id, status){
             const completed = event.target.checked;
@@ -62,13 +62,22 @@
 
 <body>
     <div class="grid justify-center gap-y-2.5 p-4 max-w-xl m-auto">
+               
+        <% if(errors && errors.length > 0)  { %>
+            <div class="bg-red-600 text-white px-4 py-2 rounded-md list-inside">
+                <% for(let err of  errors) { %>
+                    <li> <%= err %> </li>
+                <% } %>
+            </div>
+          <% } %>
+        
         <%- include('header.ejs') -%>
         <a href="/signout">Logout</a>
-        <form action="/" method="post" onsubmit="addTodo(this)"  enctype="text/plain">
+        <form action="/todos" method="post" enctype="application/x-www-form-urlencoded">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input class="border-gray-dark border px-2 py-3 rounded-md" type="text" placeholder="What's next?"
-                name="title" required autocomplete="off"/>
-            <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="dueDate" required autocomplete="off"/>
+                name="title"  autocomplete="off"/>
+            <input class="border-gray-dark border px-2 py-3 rounded-md" type="date" name="dueDate" autocomplete="off"/>
             <button class="px-4 py-3 text-white rounded-md bg-green-500" name="">Add</button>
         </form>
         

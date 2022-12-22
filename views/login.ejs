@@ -20,13 +20,12 @@
 <body>
     <div class="grid justify-center gap-y-2.5 p-4 max-w-xl m-auto">
 
-        
-        <% if(messages && messages.error && messages.error.length > 0)  { %>
+        <% if(errors && errors.length > 0)  { %>
             <div class="bg-red-600 text-white px-4 py-2 rounded-md list-inside">
-                <% for(let err of  messages.error) { %>
-                    <li> <%= err %></li>
+                <% for(let err of  errors) { %>
+                    <li> <%= err %> </li>
+                <% } %>
             </div>
-            <% } %>
           <% } %>
         
         <h1 class="text-xl">Sign in</h1>

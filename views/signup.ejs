@@ -20,6 +20,14 @@
 <body>
     <div class="grid justify-center gap-y-2.5 p-4 max-w-xl m-auto">
         <h1 class="text-xl">Signup as a new user</h1>
+        <% if(errors && errors.length > 0)  { %>
+            <div class="bg-red-600 text-white px-4 py-2 rounded-md list-inside">
+                <% for(let err of  errors) { %>
+                    <li> <%= err %> </li>
+                <% } %>
+            </div>
+        <% } %>
+
         <form action="/users" method="post" class="flex flex-col gap-2">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <label>

@@ -96,10 +96,18 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: true,
-          len: 5,
+          notEmpty: { msg: "Title must not be empty" },
+          len: { args: 5, msg: "Title must be 5 or more charecters" },
         },
       },
-      dueDate: DataTypes.DATEONLY,
+      dueDate: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "due date is required" },
+          notEmpty: { msg: "due date is required" },
+        },
+      },
       completed: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
