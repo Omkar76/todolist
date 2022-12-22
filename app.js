@@ -8,7 +8,7 @@ const passport = require("passport");
 const path = require("path");
 const session = require("express-session");
 const ensureLogin = require("connect-ensure-login");
-
+const FileStore = require("session-file-store")(session);
 const { Todo, User } = require("./models");
 const { ValidationError } = require("sequelize");
 
@@ -23,6 +23,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
+    store: new FileStore({ path: "sessions" }),
+    resave: false,
+    saveUninitialized: false,
     secret: "B8/tsjAyWkJr)+esh:a.SSW..o.ZM?",
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hrs
