@@ -251,4 +251,12 @@ app.delete(
   }
 );
 
+app.use(function (err, req, res, next) {
+  res.send(
+    "Something went wrong! Try refreshing a the browser or go back to <a href=" /
+      ">home page</a>"
+  );
+  console.log(err);
+});
+
 module.exports = app;
