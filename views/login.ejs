@@ -17,8 +17,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body>    
     <div class="grid justify-center gap-y-2.5 p-4 max-w-xl m-auto">
+        <%- include('header.ejs') -%>
 
         <% if(errors && errors.length > 0)  { %>
             <div class="bg-red-600 text-white px-4 py-2 rounded-md list-inside">
@@ -42,6 +43,7 @@
 
             <button class="w-full bg-green-600 p-2 text-white rounded-md">Submit</button>
         </form>
+        <%- include('footer.ejs') %>
     </div>
 </body>
 

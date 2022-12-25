@@ -19,6 +19,7 @@
 
 <body>
     <div class="grid justify-center gap-y-2.5 p-4 max-w-xl m-auto">
+        <%- include('header.ejs') -%>
         <h1 class="text-xl">Signup as a new user</h1>
         <% if(errors && errors.length > 0)  { %>
             <div class="bg-red-600 text-white px-4 py-2 rounded-md list-inside">
@@ -49,6 +50,7 @@
 
             <button class="w-full bg-green-600 p-2 text-white rounded-md">Submit</button>
         </form>
+        <%- include('footer.ejs') %>
     </div>
 </body>
 
