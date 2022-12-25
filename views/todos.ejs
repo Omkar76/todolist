@@ -72,7 +72,11 @@
           <% } %>
         
         <%- include('header.ejs') -%>
-        <a href="/signout">Logout</a>
+        <div class="flex justify-between flex-row">
+            <span class="font-bold">Signed in as <%= username %></span>
+            <a href="/signout" class="text-red-600 font-bold">Logout</a>  
+        </div>
+        
         <form action="/todos" method="post" enctype="application/x-www-form-urlencoded">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input class="border-gray-dark border px-2 py-3 rounded-md" type="text" placeholder="What's next?"

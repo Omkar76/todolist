@@ -85,7 +85,11 @@ passport.deserializeUser((user, done) => {
 app.set("view engine", "ejs");
 
 app.get("/", async function (request, response) {
-  response.render("index");
+  if (request.isAuthenticated()) {
+    response.redirect("/todos/");
+  } else {
+    response.render("index");
+  }
 });
 
 app.get("/signup", function (request, response) {
@@ -166,6 +170,7 @@ app.get(
         dueLater,
         completed,
         csrfToken: request.csrfToken(),
+        username: request.user.firstName + " " + request.user.lastName,
       });
     } else {
       return response.json({ overdue, dueToday, dueLater, completed });
@@ -239,11 +244,11 @@ app.delete(
     let rowCount = 0;
     try {
       rowCount = await Todo.remove(request.params.id, request.user.id);
-      response.send(rowCount != 0);
+      response.json({ success: rowCount != 0 });
       return;
     } catch (error) {
       console.log(error);
-      response.status(422).json(false);
+      response.status(422).json({ success: false });
       return;
     }
     // // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
@@ -252,10 +257,7 @@ app.delete(
 );
 
 app.use(function (err, req, res, next) {
-  res.send(
-    "Something went wrong! Try refreshing a the browser or go back to <a href=" /
-      ">home page</a>"
-  );
+  res.sendStatus(500);
   console.log(err);
 });
 
