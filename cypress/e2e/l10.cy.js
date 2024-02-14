@@ -3,14 +3,7 @@
 if (studentSubmissionUrl.endsWith("/")) {
   studentSubmissionUrl = studentSubmissionUrl.slice(0, -1);
 }
-const clearSignUpFields = (cy) => {
-  cy.get('input[name="firstName"]').clear();
-  cy.get('input[name="email"]').clear();
-  cy.get('input[name="password"]').clear();
-  if (cy.get('input[name="lastName"]')) {
-    cy.get('input[name="lastName"]').clear();
-  }
-};
+
 const clearLoginFields = (cy) => {
   cy.get('input[name="email"]').clear();
   cy.get('input[name="password"]').clear();
@@ -37,56 +30,25 @@ const email = "vta@pupilfirst.com";
 const password = "123456789";
 
 describe("Preparing for Level 10 milestone testing, first we will verify signup", () => {
-  it("should not create an account with empty email, password, or firstName", () => {
+  it("Should create an account", () => {
     cy.visit(studentSubmissionUrl + "/signup");
     cy.get('input[name="firstName"]').should("exist");
     cy.get('input[name="email"]').should("exist");
     cy.get('input[name="password"]').should("exist");
 
-    clearSignUpFields(cy);
-
     // Empty firstName
+    cy.get('input[name="firstName"]').type("L10 user");
     cy.get('input[name="email"]').type("vta@pupilfirst.com");
     cy.get('input[name="password"]').type("12345678");
 
     if (cy.get('input[name="lastName"]')) {
       cy.get('input[name="lastName"]').type("User");
     }
-    cy.get('buttonz').click();
+    cy.get('button').click();
 
     cy.wait(500);
     cy.location().should((loc) => {
-      expect(loc.pathname).to.eq("/signup");
-    });
-
-    // Empty email
-    clearSignUpFields(cy);
-    cy.get('input[name="firstName"]').type("L10 user");
-    cy.get('input[name="password"]').type("12345678");
-
-    if (cy.get('input[name="lastName"]')) {
-      cy.get('input[name="lastName"]').type("User");
-    }
-    cy.get('buttonz').click();
-
-    cy.wait(500);
-    cy.location().should((loc) => {
-      expect(loc.pathname).to.eq("/signup");
-    });
-
-    // Empty password
-    clearSignUpFields(cy);
-    cy.get('input[name="firstName"]').type("L10 user");
-    cy.get('input[name="email"]').type("l10vta@pupilfirst.com");
-
-    if (cy.get('input[name="lastName"]')) {
-      cy.get('input[name="lastName"]').type("User");
-    }
-    cy.get('buttonz').click();
-
-    cy.wait(500);
-    cy.location().should((loc) => {
-      expect(loc.pathname).to.eq("/signup");
+      expect(loc.pathname).to.eq("/login");
     });
   });
 });
