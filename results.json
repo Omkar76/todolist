@@ -1,0 +1,13 @@
+{
+  "cypress/e2e/l10.cy.js": {
+    "Preparing for Level 10 milestone testing, first we will verify signup should not create an account with empty email, password, or firstName": "failed"
+  },
+  "totals": {
+    "suites": 1,
+    "tests": 1,
+    "failed": 1,
+    "passed": 0,
+    "pending": 0,
+    "skipped": 0
+  }
+}

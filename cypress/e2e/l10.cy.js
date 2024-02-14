@@ -1,7 +1,3 @@
-let studentSubmissionUrl =
-  Cypress.env("STUDENT_SUBMISSION_URL");
-
-
   let studentSubmissionUrl =
   Cypress.env("STUDENT_SUBMISSION_URL") || "http://localhost:3000";
 if (studentSubmissionUrl.endsWith("/")) {
@@ -56,7 +52,7 @@ describe("Preparing for Level 10 milestone testing, first we will verify signup"
     if (cy.get('input[name="lastName"]')) {
       cy.get('input[name="lastName"]').type("User");
     }
-    cy.get('button[type="submit"]').click();
+    cy.get('buttonz').click();
 
     cy.wait(500);
     cy.location().should((loc) => {
@@ -71,7 +67,7 @@ describe("Preparing for Level 10 milestone testing, first we will verify signup"
     if (cy.get('input[name="lastName"]')) {
       cy.get('input[name="lastName"]').type("User");
     }
-    cy.get('button[type="submit"]').click();
+    cy.get('buttonz').click();
 
     cy.wait(500);
     cy.location().should((loc) => {
@@ -86,7 +82,7 @@ describe("Preparing for Level 10 milestone testing, first we will verify signup"
     if (cy.get('input[name="lastName"]')) {
       cy.get('input[name="lastName"]').type("User");
     }
-    cy.get('button[type="submit"]').click();
+    cy.get('buttonz').click();
 
     cy.wait(500);
     cy.location().should((loc) => {
