@@ -4,16 +4,6 @@ if (studentSubmissionUrl.endsWith("/")) {
   studentSubmissionUrl = studentSubmissionUrl.slice(0, -1);
 }
 
-const clearLoginFields = (cy) => {
-  cy.get('input[name="email"]').clear();
-  cy.get('input[name="password"]').clear();
-};
-
-const clearFields = (cy) => {
-  cy.get('input[name="title"]').clear();
-  cy.get('input[name="dueDate"]').clear();
-};
-
 function formatDateWithOffset(daysOffset = 0) {
   const date = new Date(); // Get the current date
   date.setDate(date.getDate() + daysOffset); // Add or subtract days based on the offset

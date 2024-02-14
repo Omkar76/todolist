@@ -55,3 +55,6 @@ jobs:
         run: |
           yarn add cypress cypress-json-results
           npx cypress run --env STUDENT_SUBMISSION_URL="http://localhost:3000"
+
+      - name: Run unit tests
+        run: npm test
