@@ -45,7 +45,6 @@ jobs:
       - name: Run the app
         id: run-app
         run: |
-          npm install
           npx sequelize-cli db:drop
           npx sequelize-cli db:create
           npx sequelize-cli db:migrate
@@ -54,5 +53,5 @@ jobs:
 
       - name: Run integration tests
         run: |
-          npm install cypress cypress-json-results
-          npx cypress run --env STUDENT_SUBMISSION_URL="http://localhost:3000/"
+          yarn add cypress cypress-json-results
+          npx cypress run --env STUDENT_SUBMISSION_URL="http://localhost:3000"
