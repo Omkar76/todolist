@@ -70,17 +70,17 @@ passport.use(
 
 passport.serializeUser((user, done) => {
   console.log(user);
-  done(null, user);
+  done(null, user.id);
 });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
-  // User.findByPk(id)
-  // .then(user=>{
-  //   done(null, user);
-  // }).catch(error=>{
-  //   done(error, null)
-  // })
+passport.deserializeUser((id, done) => {
+  // done(null, user);
+  User.findByPk(id)
+  .then(user=>{
+    done(null, user);
+  }).catch(error=>{
+    done(error, null)
+  })
 });
 app.set("view engine", "ejs");
 
