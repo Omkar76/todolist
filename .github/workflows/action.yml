@@ -74,6 +74,8 @@ jobs:
     environment: secrets
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      SLACK_MESSAGE: "Job ${{ job.status }} for ${{ github.repository }} by ${{ github.actor }}"
+
     runs-on: ubuntu-latest
     needs: [run-tests, deploy]
     steps:
@@ -84,5 +86,4 @@ jobs:
           status: ${{ job.status }}
           author_name: ${{ github.actor }}
           fields: repo,message,commit,action,eventName,ref,workflow,job,took
-          message: "Job ${{ job.status }} for ${{ github.repository }} by ${{ github.actor }}"
         
