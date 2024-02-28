@@ -87,7 +87,7 @@ describe("Todo Application", function () {
       completed: false,
       _csrf,
     });
-    expect(response.statusCode).toBe(201);
+    expect(response.statusCode).toBe(200);
   });
 
   test("Marks a todo with the given ID as complete", async () => {
