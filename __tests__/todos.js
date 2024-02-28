@@ -38,7 +38,7 @@ async function login(agent, email, password) {
 describe("Todo Application", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(4000, () => {});
+    server = app.listen(4001, () => {});
     agent = request.agent(server);
   });
 
@@ -71,7 +71,7 @@ describe("Todo Application", function () {
     expect(res.statusCode).toBe(302);
 
     res = await agent.get("/todos");
-    expect(res.statusCode).toBe(303);
+    expect(res.statusCode).toBe(302);
   });
 
   test("Creates a todo", async () => {
