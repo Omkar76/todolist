@@ -58,10 +58,11 @@ jobs:
 
       - name: Run unit tests
         run: npm test
-        
+  
   deploy:
     runs-on: ubuntu-latest
     needs: [run-tests]
+    if: ${{ github.event.run-tests.conclusion == 'success' }}
     environment: secrets
     steps:
         - name: Deploy to production
