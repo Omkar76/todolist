@@ -7,8 +7,14 @@
         "instances": "max",
         "log_file": "combined.out.log",
         "env": {
-            "PORT": 3000
-        }
+            "NODE_ENV": "development"
+          },
+          "env_test": {
+            "NODE_ENV": "test"
+          },
+          "env_production": {
+            "NODE_ENV": "production"
+          }
       }
     ]
   }
