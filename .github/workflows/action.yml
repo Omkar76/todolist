@@ -74,7 +74,7 @@ jobs:
     environment: secrets
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      SLACK_MESSAGE: "Tests -  ${{needs.run-tests.status}} \ Deploy - ${{needs.deploy.status}}"
+      SLACK_MESSAGE: "Tests -  ${{needs.run-tests.result}} \ Deploy - ${{needs.deploy.result}}"
 # wait for other jobs 
 
 
