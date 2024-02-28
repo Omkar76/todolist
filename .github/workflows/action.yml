@@ -70,11 +70,13 @@ jobs:
             api-key: ${{ secrets.MY_RENDER_API_KEY }}
 
   notify_success_or_fail_to_slack:
-    if: always()
+    if: ${{always()}}
     environment: secrets
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       SLACK_MESSAGE: "Tests -  ${{needs.run-tests.status}} \ Deploy - ${{needs.deploy.status}}"
+# wait for other jobs 
+
 
     runs-on: ubuntu-latest
     needs: [run-tests, deploy]
