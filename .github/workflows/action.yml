@@ -74,7 +74,7 @@ jobs:
     environment: secrets
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      SLACK_MESSAGE: "Tests -  ${{needs.run-tests.result}} \ Deploy - ${{needs.deploy.result}}"
+      SLACK_MESSAGE: "Tests - $(if [ ${{needs.run-tests.result}} == 'success' ]; then echo '✅'; else echo '❌'; fi) \n Deploy - $(if [ ${{needs.deploy.result}} == 'success' ]; then echo '✅'; else echo '❌'; fi)"
 # wait for other jobs 
 
 
