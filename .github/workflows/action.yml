@@ -72,20 +72,7 @@ jobs:
   notify_success_or_fail_to_slack:
     if: ${{always()}}
     environment: secrets
-    run: |
-        if [ "${{needs.run-tests.result}}" == "success" ]; then
-          TEST_STATUS=":white_check_mark:"
-        else
-          TEST_STATUS=":x:"
-        fi
-        if [ "${{needs.deploy.result}}" == "success" ]; then
-          DEPLOY_STATUS=":white_check_mark:"
-        else
-          DEPLOY_STATUS=":x:"
-        fi
-        SLACK_MESSAGE="Tests - $TEST_STATUS Deploy - $DEPLOY_STATUS"
-        echo $SLACK_MESSAGE
-        echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV
+
 
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -93,6 +80,20 @@ jobs:
     needs: [run-tests, deploy]
     steps:
       - uses: actions/checkout@v2
+        run: |
+          if [ "${{needs.run-tests.result}}" == "success" ]; then
+            TEST_STATUS=":white_check_mark:"
+          else
+            TEST_STATUS=":x:"
+          fi
+          if [ "${{needs.deploy.result}}" == "success" ]; then
+            DEPLOY_STATUS=":white_check_mark:"
+          else
+            DEPLOY_STATUS=":x:"
+          fi
+          SLACK_MESSAGE="Tests - $TEST_STATUS Deploy - $DEPLOY_STATUS"
+          echo $SLACK_MESSAGE
+          echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV
       - name: Notify on success or failure
         uses: rtCamp/action-slack-notify@v2
         with:
