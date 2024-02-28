@@ -1,0 +1,15 @@
+{
+    "apps": [
+      {
+        "name": "todolist",
+        "script": "index.js",
+        "exec_mode": "cluster",
+        "instances": "max",
+        "log_file": "combined.out.log",
+        "env": {
+            "PORT": 3000
+        }
+      }
+    ]
+  }
+  
