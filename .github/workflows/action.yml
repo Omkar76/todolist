@@ -71,6 +71,7 @@ jobs:
 
   notify_success_or_fail_to_slack:
     if: always()
+    environment: secrets
     runs-on: ubuntu-latest
     needs: [run-tests, deploy]
     steps:
