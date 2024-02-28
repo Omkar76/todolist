@@ -80,6 +80,7 @@ jobs:
     needs: [run-tests, deploy]
     steps:
       - uses: actions/checkout@v2
+      - name: set slack message
         run: |
           if [ "${{needs.run-tests.result}}" == "success" ]; then
             TEST_STATUS=":white_check_mark:"
