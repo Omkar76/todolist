@@ -84,4 +84,5 @@ jobs:
           status: ${{ job.status }}
           author_name: ${{ github.actor }}
           fields: repo,message,commit,action,eventName,ref,workflow,job,took
-          # slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+          message: "Job ${{ job.status }} for ${{ github.repository }} by ${{ github.actor }}"
+        
