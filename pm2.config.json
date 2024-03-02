@@ -5,6 +5,7 @@
         "script": "index.js",
         "exec_mode": "cluster",
         "instances": "max",
+        "log_date_format": "YYYY-MM-DD HH:mm:ss",
         "log_file": "combined.out.log",
         "env": {
             "NODE_ENV": "development"
